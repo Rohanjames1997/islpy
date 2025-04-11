@@ -59,14 +59,11 @@ jobs:
 
   upload_pypi:
     needs: [build_wheels, build_sdist]
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, ubuntu-22.04-arm]
+    runs-on: ubuntu-latest
     # upload to PyPI on every tag starting with 'v'
-    # if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     # alternatively, to publish when a GitHub Release is created, use the following rule:
-    # if: github.event_name == 'release' && github.event.action == 'published'
+    if: github.event_name == 'release' && github.event.action == 'published'
     environment:
       name: pypi
       url: https://pypi.org/p/islpy
@@ -86,12 +83,9 @@ jobs:
           # To test: repository_url: https://test.pypi.org/legacy/
 
   upload_testpypi:
-    # if: startsWith(github.ref, 'refs/tags/testv')
+    if: startsWith(github.ref, 'refs/tags/testv')
     needs: [build_wheels, build_sdist]
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, ubuntu-22.04-arm]
+    runs-on: ubuntu-latest
 
     environment:
       name: testpypi
